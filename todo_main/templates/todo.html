@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <p>{{request.user}}</p>
+        <a href="{% url "logout" %}">Logout</a>
+    {% else %}
+        <a href="{% url "login" %}">Login</a>
+    {% endif %}
+    <h3>TODO APP</h3>
+    <form method="POST" action=''>
+        {% csrf_token %}
+        {{form.as_p}} <br>
+        <input type="submit">
+    </form>
+    <table>
+        <tr>
+            <th>
+                Item
+            </th>
+            <th>Description</th>
+            <th>Time</th>
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            {% if task.completed == False %}
+                <td>{{task.heading}}</td>
+                <td>{{task.note}}</td>
+                <td><p>{{task.created|date:'D, d/M/y h:s'}}</p></td>
+                <td><a href="{% url 'update' pk=task.id %}">Update</a></td>
+                <td><a href="{% url 'delete' pk=task.id %}">Delete</a></td>
+            {% else %}
+                <td><strike>{{task.heading}}</strike></td>
+                <td><strike>{{task.note}}</strike></td>
+                <td><p>{{task.completed_at}}</p></td>
+                <td><a href="{% url 'update' pk=task.id %}">Update</a></td>
+                <td><a href="{% url 'delete' pk=task.id %}">Delete</a></td>
+            {% endif %}
+        </tr>
+        {% empty %}
+            <h3>No tasks for today!</h3>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
+
+
+
+
+        <!-- <tr>
+            <td>
+            {% for task in tasks %}
+            {% if task.completed == True %}
+                <strike><h5>{{task.heading|upper}}</h5></strike>
+            {% else %}
+                <h5>{{task.heading|upper}}</h5>
+                <p>{{task.note}}</p>
+            <td>
+                <a href="{% url 'update' pk=task.id %}">Update</a>
+                <a href="{% url 'delete' pk=task.id %}">Delete</a>
+                <a href=""></a>
+            </td>
+            {% endif %}
+            {% endfor %}
+            </td>
+            
+        </tr> -->
